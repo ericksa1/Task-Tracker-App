@@ -1,49 +1,60 @@
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #e4d4c8; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+// Section 1: TODOs
+// TODO: Register submissions from the user on the form.
+// TODO: Determine the value of the data submitted and add it to a JavaScript array calle
+// TODO: Call the render function to update the table with the new tasks
+
+
+let tasks = [];
+
+const taskForm = document.getElementById("taskForm");
+const taskTable = document.getElementById("taskTable").querySelector('tbody');
+
+function handleSubmission(event) {
+    event.preventDefault(); 
+
+    const taskName = document.getElementById('taskName').value;
+    const taskDescription = document.getElementById('taskDescription').value;
+    const taskDeadline = document.getElementById('taskDeadline').value;
+
+    if (!taskName || !taskDeadline) {
+        alert('Task name and deadline are required!');
+        return;
+    }
+
+    tasks.push({ name: taskName, description: taskDescription, deadline: taskDeadline });
+    
+    render();
 }
 
-.container {
-    max-width: 800px;
-    margin: 0;
-    padding: 20px;
-    background-color: #d0b49f;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+function render() {
+    taskTable.innerHTML = tasks.map((task, index) => `
+        <tr>
+            <td>${task.name}</td>
+            <td>${task.description}</td>
+            <td>${task.deadline}</td>
+            <td>
+                <button onclick="markTaskComplete(${index})">Complete</button>
+                <button onclick="removeTask(${index})">Remove</button>
+            </td>
+        </tr>
+    `).join('');
 }
 
-h1 {
-    color: #523a28;
+function init() {
+    taskTable.innerHTML = ''; 
+    tasks = [];
+    render(); 
 }
 
-form {
-    margin-bottom: 20px;
+taskForm.addEventListener('submit', handleSubmission);
+
+init();
+
+function markTaskComplete(index) {
+    alert(`Task "${tasks[index].name}" completed!`);
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
+function removeTask(index) {
+    tasks.splice(index, 1); 
+    render(); 
 }
-
-th, td {
-    padding: 10px;
-    border: 1px solid #a47551; 
-    text-align: left;
-}
-
-th {
-    background-color: #d0b49f;
-    color: #523a28; 
-}
-
-td {
-    background-color: #ffffff; 
-}
-
